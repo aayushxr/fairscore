@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# Raw data is fetched from OpenML and cached locally; never committed.
+data/raw/*
+!data/raw/.gitkeep

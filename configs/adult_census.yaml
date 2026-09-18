@@ -1,0 +1,52 @@
+# Adult Census Income (OpenML "adult", version 2).
+# ~48,842 rows. Target `class` is >50K/<=50K; `>50K` is the positive outcome.
+dataset:
+  name: adult_census
+  openml_name: adult
+  openml_version: 2
+  expected_rows: 48842
+
+target:
+  column: class
+  positive_label: ">50K"
+
+# Adult encodes missing values as "?"; converted to NaN on load, imputed later.
+na_values: ["?"]
+
+sensitive:
+  # Held out of training entirely; used only as audit groups. `race` is
+  # multi-class and heavily imbalanced — all categories are kept in the audit.
+  attributes: [sex, race]
+  # Used (with the target) for joint stratification of the train/test split.
+  primary: sex
+
+features:
+  numeric:
+    - age
+    - education-num
+    - capital-gain
+    - capital-loss
+    - hours-per-week
+  categorical:
+    - workclass
+    - education
+    - marital-status
+    - occupation
+    - relationship
+    - native-country
+  # fnlwgt is a census sampling weight, not an applicant attribute.
+  drop:
+    - fnlwgt
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+scoring:
+  pdo: 50
+  base_score: 600
+  base_odds: 1.0
+  # Approve at or above this score. 600 is odds 1:1, i.e. probability 0.5.
+  cutoff_score: 600
+  min_score: 300
+  max_score: 850

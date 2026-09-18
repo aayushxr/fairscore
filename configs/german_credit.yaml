@@ -1,0 +1,71 @@
+# German Credit (OpenML "credit-g", version 1).
+# 1,000 rows, 20 attributes. Target `class` is good/bad; `good` is the positive outcome.
+dataset:
+  name: german_credit
+  openml_name: credit-g
+  openml_version: 1
+  expected_rows: 1000
+
+target:
+  column: class
+  positive_label: good
+
+# Values to treat as missing when the raw frame is loaded. None for this dataset.
+na_values: []
+
+sensitive:
+  # Held out of training entirely; used only as audit groups.
+  attributes: [sex, age_group]
+  # Used (with the target) for joint stratification of the train/test split.
+  primary: sex
+  # German Credit has no plain sex column: it is encoded as the prefix of
+  # `personal_status` ("male single", "female div/dep/mar", ...). The loader
+  # parses the prefix into `sex` and drops `personal_status` from the features
+  # so it cannot leak the sensitive attribute back in.
+  derive_sex_from: personal_status
+  # Group attribute only — raw `age` stays available as a model feature.
+  # The audit is re-run at `sensitivity_thresholds` to check the cut point.
+  binarize_age:
+    column: age
+    threshold: 25
+    group_name: age_group
+    sensitivity_thresholds: [22, 25, 28, 30, 35, 40]
+
+features:
+  numeric:
+    - duration
+    - credit_amount
+    - installment_commitment
+    - residence_since
+    - age
+    - existing_credits
+    - num_dependents
+  categorical:
+    - checking_status
+    - credit_history
+    - purpose
+    - savings_status
+    - employment
+    - other_parties
+    - property_magnitude
+    - other_payment_plans
+    - housing
+    - job
+    - own_telephone
+    - foreign_worker
+  # Dropped from the feature set (in addition to target and sensitive columns).
+  drop:
+    - personal_status
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+scoring:
+  pdo: 50
+  base_score: 600
+  base_odds: 1.0
+  # Approve at or above this score. 600 is odds 1:1, i.e. probability 0.5.
+  cutoff_score: 600
+  min_score: 300
+  max_score: 850

@@ -1,0 +1,5 @@
+attribute,group,count,positive_rate
+sex,female,310,0.6483870967741936
+sex,male,690,0.7231884057971014
+age_group,<=25,190,0.5789473684210527
+age_group,>25,810,0.7283950617283951

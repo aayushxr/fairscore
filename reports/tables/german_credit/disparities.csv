@@ -1,0 +1,5 @@
+model,attribute,dp_difference,dp_ratio,eo_difference,passes_four_fifths
+LogisticRegression,sex,0.029453015427769902,0.9627329192546585,0.1318681318681319,True
+LogisticRegression,age_group,0.07342430149447698,0.9063406547865727,0.125,True
+GradientBoosting,sex,0.05119214586255261,0.9327188940092166,0.03941857600394194,True
+GradientBoosting,age_group,0.10753736192332675,0.8595076400679118,0.0625,True
